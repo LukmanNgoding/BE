@@ -1,0 +1,635 @@
+openapi: 3.0.3
+info:
+  title: "Social Media Apps"
+  description: "Project 1 Group 5 Social Media Apps"
+  version: 1.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/aziz-wahyudin/Social-Media-Apps/1.0.0
+  - url: "http://18.143.74.57:8000" # perlu diubah menyesuaikan dengan host domain
+    description: "link project"
+tags:
+  - name: Users
+  - name: Authentication
+  - name: Posts 
+  - name: Comments 
+paths:
+#++++++++++++++++++++
+# Authentication
+#++++++++++++++++++++
+  /login:
+    post:
+      tags:
+        - "Authentication"
+      summary: "user login"
+      requestBody:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                  password:
+                    type: string
+                    format: password
+              example:
+                username: aziz123
+                password: 123456789
+      responses:
+        '200':
+          description: "login success"
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/ResponseObject"
+              example:
+                message: "login success"
+                data:
+                  username: "aziz123"
+                  token: "12jfoajfidaskudsghusdhfijijwiruijagjidf"
+
+        '400':
+          $ref: "#/components/responses/400"
+        '500':
+          $ref: "#/components/responses/500"
+#++++++++++++++++++++
+# Users
+#++++++++++++++++++++
+  /users:
+    post:
+      tags:
+        - "Users"
+      summary: "Registration feature for user"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: "#/components/schemas/RegistrationObject"
+            example:
+              username: "aziz123"
+              email: "azizw@duck.com"
+              password: "123456789" 
+      responses:
+        '201':
+          description: "success create account"
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/ResponseObject"
+              example:
+                message: "success register account"
+                data:
+                  id_user: 2
+                  username: "aziz123"
+                  email: "azizw@duck.com"
+                  password: "123456789"
+        '400':
+          $ref: "#/components/responses/400"
+        '500':
+          $ref: "#/components/responses/500"
+    put:
+      tags:
+        - "Users"
+      summary: "Update user profile by account owner"
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              $ref: "#/components/schemas/RequestUpdate"
+            example:
+              username: "aziz123"
+              email: "azizw@duck.com"
+              password: "123456789"
+              photo: aziz123.jpg
+              bio: "oplover"
+      responses:
+        '200':
+          description: "success update user"
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/ResponseObject"
+              example:
+                message: "success update user"
+                data:
+                  id_user: 2
+                  username: "aziz123"
+                  email: "azizw@duck.com"
+                  password: "123456789"
+                  photo: aziz123.jpg  
+                  bio: "oplover"
+        '400':
+          $ref: "#/components/responses/400"
+        '500':
+          $ref: "#/components/responses/500"  
+    delete:
+      tags:
+        - "Users"
+      security:
+      - bearerAuth: []
+      summary: Delete by id
+      responses:
+        200: 
+          description: "Success deactive account"
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ResponseObject'
+              example:
+                message: "Success deactive account"
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+    get:
+      tags:
+        - "Users"
+      summary: "shows login user profile"
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: "Success get user profile"
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/ResponseArray"
+              example:
+                message: "success get user profile"
+                data:
+                  id_user: 2
+                  username: "aziz123"
+                  email: "azizw@duck.com"
+                  password: "123456789"
+                  photo: aziz123.jpg  
+                  bio: "oplover"
+                  post: 
+                    - id_post: 1
+                      content: "#spoileronepiece1064"
+                      created_at: "2022-10-17 10:24:17"
+                      owner: aziz123
+                    - id_post: 2
+                      content: "#spoilerkaguya-sama"
+                      created_at: "2022-10-18 10:24:17"
+                      owner: aziz123
+        '400':
+          $ref: "#/components/responses/400"
+        '500':
+          $ref: "#/components/responses/500"
+  /users/{username}:
+    get:
+      parameters:
+      - in: path
+        name: username
+        required: true
+        schema:
+          type: string 
+      tags:
+        - "Users"
+      summary: "shows another user profile"
+      responses:
+        '201':
+          description: "success get another user profile"
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/ResponseArray"
+              example:
+                message: "success get another user profile"
+                data:
+                  id_user: 2
+                  username: "aziz123"
+                  email: "azizw@duck.com"
+                  password: "123456789"
+                  photo: aziz123.jpg  
+                  bio: "oplover"
+                  post: 
+                    - id_post: 1
+                      content: "#spoileronepiece1064"
+                      created_at: "2022-10-17 10:24:17"
+                      owner: aziz123
+                    - id_post: 2
+                      content: "#spoilerkaguya-sama"
+                      created_at: "2022-10-18 10:24:17"
+                      owner: aziz123
+        '400':
+          $ref: "#/components/responses/400"
+        '500':
+          $ref: "#/components/responses/500"
+
+
+#++++++++++++++++++++
+# Posts
+#++++++++++++++++++++
+  /posts:
+    get:
+      tags:
+        - "Posts"
+      summary: "shows all post for timeline"
+      responses:
+        '200':
+          description: "Success get all post with comments preview"
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/ResponseArray"
+              example:
+                message: "success get all post"
+                data:
+                  - id_post: 1
+                    content: "#spoileronepiece1064"
+                    created_at: "2022-10-17 10:24:17"
+                    owner: aziz123
+                    comment:
+                      - id_comment: 2
+                        username: "aziz123"
+                        content: "why r u reading mid" 
+                  - id_post: 2
+                    content: "#spoilerkaguya-sama"
+                    created_at: "2022-10-18 10:24:17"
+                    owner: aziz123
+                    comment:
+                      - id_comment: 2
+                        username: "aziz123"
+                        content: "why r u reading mid" 
+        '400':
+          $ref: "#/components/responses/400"
+        '500':
+          $ref: "#/components/responses/500"
+    post:
+      tags:
+        - "Posts"
+      summary: "Add new post"
+      security:
+        - bearerAuth: []
+      requestBody:
+        $ref: "#/components/requestBodies/PostContent"
+        example:
+          content: "#onepiece1064spoiler ..."
+          photo: "server/onepiece1064spoiler.jpg"
+      responses:
+        '201':
+          description: "succsess created post"
+          content:
+            application/json:
+              schema: 
+                type: object
+                $ref: "#/components/schemas/ResponsePost"
+              example:
+                message: "succes post a post"
+                data: 
+                  id_post: 2
+                  content: "#onepiece1064spoiler ...."
+                  photo: "server/onepiece1064spoiler.jpg"
+                  username: "aziz123"
+                  created_at: "2022-10-17 10:24:17"
+        '400':
+          $ref: "#/components/responses/400"
+        '500':
+          $ref: "#/components/responses/500"
+  /posts/{id_post}:
+    put:
+      parameters:
+      - in: path
+        name: id_post
+        required: true
+        schema:
+          type: integer
+      tags:
+        - "Posts"
+      summary: "Update post by account owner"
+      security:
+        - bearerAuth: []
+      requestBody:
+        $ref: "#/components/requestBodies/PostContent"
+        example:
+          content: "#onepiece1064spoiler ..."
+          photo: "server/onepiece1064spoiler.jpg"  
+      responses:
+        '201':
+          description: "succsess updated post"
+          content:
+            application/json:
+              schema: 
+                type: object
+                $ref: "#/components/schemas/ResponsePost"
+              example:
+                message: "succes post a post"
+                data: 
+                  id_post: 2
+                  content: "#onepiece1064spoiler ...."
+                  photo: "server/onepiece1064spoiler.jpg"
+                  username: "aziz123"
+                  created_at: "2022-10-17 10:24:17"
+        '400':
+          $ref: "#/components/responses/400"
+        '500':
+          $ref: "#/components/responses/500"
+          
+    delete:
+      parameters:
+      - in: path
+        name: id_post
+        required: true
+        schema:
+          type: integer
+      tags:
+        - "Posts"
+      security:
+        - bearerAuth: []
+      summary: Delete by id
+      responses:
+        200: 
+          description: "Success delete post"
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ResponseObject'
+              example:
+                message: "Success delete post"
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+#++++++++++++++++++++
+# Comments
+#++++++++++++++++++++
+  /comments:
+    post:
+      tags:
+        - "Comments"
+      security:
+        - bearerAuth: []
+      summary: "Create comment"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+            example:
+              content: "why r u reading mid"      
+      responses:
+        '201':
+          description: "success create comment"
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/CommentObject"
+              example:
+                message: "success create comment"
+                data:
+                  id_comment: 2
+                  username: "aziz123"
+                  id_post: 1
+                  content: "why r u reading mid"  
+        '400':
+          $ref: "#/components/responses/400"
+        '500':
+          $ref: "#/components/responses/500"
+
+    get:
+      tags:
+        - "Comments"
+      summary: "show all comments"
+      responses:
+        '200':
+          description: "Success get all comments"
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/ResponseArray"
+              example:
+                message: "success get all comments"
+                data:
+                  - id_comment: 1
+                    username: "aziz123"
+                    created_at: "2022-10-17 10:24:17"
+                    id_post: 2
+                    content: "bro been reading twopiece"
+                  - id_comment: 2
+                    username: "alif12"
+                    created_at: "2022-10-17 10:24:17"
+                    id_post: 3
+                    content: "dude clearly can't read"
+        '400':
+          $ref: "#/components/responses/400"
+        '500':
+          $ref: "#/components/responses/500"
+    
+  /comments/{id_comment}:
+    delete:
+      parameters:
+      - in: path
+        name: id_comment
+        required: true
+        schema:
+          type: integer
+      tags:
+        - "Comments"
+      security:
+        - bearerAuth: []
+      summary: Delete comment by comment id
+      responses:
+        200: 
+          description: "Success delete comment"
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ResponseObject'
+              example:
+                message: "Success delete comment"
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+
+#++++++++++++++++++++
+# Components
+#++++++++++++++++++++
+components:
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    UserObject:
+      type: object
+      properties:
+        id_user:
+          type: integer
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+          format: password
+        photo:
+          type: string
+        bio:
+          type: string
+    CommentObject:
+      type: object
+      properties:
+        id_comment:
+          type: integer
+        username:
+          type: string
+        id_post:
+          type: integer
+        content:
+          type: string
+    RegistrationObject:
+      type: object
+      properties:
+        id_user: 
+          type: integer
+        username:
+          type: string
+        email: 
+          type: string
+        password:
+          type: string
+          minLength: 4
+        photo:
+          type: string
+    RequestUpdate:
+      type: object
+      properties:
+        username:
+          type: string
+        email: 
+          type: string
+        password:
+          type: string
+        photo:
+          type: string
+        bio: 
+          type: string
+    RequestContent:
+      type: object
+      properties:
+        content:
+          type: string 
+        photo:
+          type: string
+    ResponsePost:
+      type: object
+      properties:
+        id_post: 
+          type: integer
+        content:
+          type: string
+        photo:
+          type: string
+        username:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        deleted_at:
+          type: string
+          format: date-time
+    ResponseObject:
+      type: object
+      properties:
+        message:
+          type: string
+        data:
+          type: object
+    ResponseArray:
+      type: object
+      properties:
+        message: 
+          type: string
+        data:
+          type: array
+          items:
+            type: object
+  requestBodies:
+    PostContent:
+      content:
+        multipart/form-data:
+          schema: 
+            $ref: "#/components/schemas/RequestContent"
+  
+  responses:
+    '200':
+      description: "login succes"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: "login success"
+    '400':
+      description: "error from user"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: "cannot process data, invalid input from user"
+    '401':
+      description: Access token is missing or invalid
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: "unauthorized access"
+    '404':
+      description: "The requested resource was not found."
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+              message: "Requested resource was not found"
+    '500':
+      description: "error from server"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: "cannot process data, something wrong on server"
