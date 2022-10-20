@@ -49,7 +49,7 @@ func (rq *repoQuery) Update(updatedData domain.Core) (domain.Core, error) {
 
 func (rq *repoQuery) Login(newUser domain.Core) (domain.Core, error) {
 	var resQry User
-	if err := rq.db.First(&resQry, "password = ?", newUser.Password).Error; err != nil {
+	if err := rq.db.First(&resQry, "username = ?", newUser.Username).Error; err != nil {
 		return domain.Core{}, err
 	}
 

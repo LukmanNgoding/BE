@@ -34,12 +34,23 @@ type RegisterResponse struct {
 	Email    string `json:"email"`
 }
 
+type UpdateResponse struct {
+	ID       uint   `json:"id"`
+	Username string `json:"username"`
+	Email    string `json:"email"`
+	Photo    string `json:"photo"`
+	Bio      string `json:"bio"`
+}
+
 func ToResponse(core interface{}, code string) interface{} {
 	var res interface{}
 	switch code {
 	case "reg":
 		cnv := core.(domain.Core)
 		res = RegisterResponse{ID: cnv.ID, Username: cnv.Username, Email: cnv.Email}
+	case "upd":
+		cnv := core.(domain.Core)
+		res = UpdateResponse{ID: cnv.ID, Username: cnv.Username, Email: cnv.Email, Photo: cnv.Photo, Bio: cnv.Bio}
 	case "all":
 		var arr []RegisterResponse
 		cnv := core.([]domain.Core)

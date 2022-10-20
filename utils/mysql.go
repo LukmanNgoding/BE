@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/ALTA-Group-Project-Social-Media-Apps/Social-Media-Apps/config"
-
+	"github.com/ALTA-Group-Project-Social-Media-Apps/Social-Media-Apps/features/user/repository"
 	"github.com/labstack/gommon/log"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -28,6 +28,5 @@ func InitDB(c *config.AppConfig) *gorm.DB {
 }
 
 func MigrateDB(db *gorm.DB) {
-	db.AutoMigrate()
-	db.AutoMigrate()
+	db.AutoMigrate(&repository.User{})
 }
